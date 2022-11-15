@@ -45,7 +45,7 @@ for epoch in range(EPOCHS):
     losses = []
     running_loss = 0
     for i, inp in enumerate(trainloader):
-        daydream.start("")
+        daydream.start()
         inputs, labels = inp
         inputs, labels = inputs.to('cuda'), labels.to('cuda')
         
@@ -67,6 +67,9 @@ for epoch in range(EPOCHS):
     scheduler.step(avg_loss)
             
 print('Training Done')
+daydream.construct("cupti_activity_tracer.csv")
+daydream.replay()
+print("Replay Done")
 
 
 

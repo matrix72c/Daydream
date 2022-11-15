@@ -1,9 +1,9 @@
+#include "dependency_graph.h"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <unordered_map>
 #include <vector>
-#include <algorithm>
-#include "/home/jc/Daydream/src/include/dependency_graph.h"
 
 Task csv_parser(std::string line) {
     Task task;
@@ -44,7 +44,7 @@ void Graph::construct_dependency_graph(const char* filename) {
     std::unordered_map<unsigned int, Task> stream_map;
     std::unordered_map<unsigned int, Task> correlation_map;
     for (auto task : tasks) {
-        if (task.Type == "Driver" || task.Type == "Runtime") {
+        if (task.Type == "DRIVER" || task.Type == "RUNTIME") {
             // CPU sequential task
             if (thread_map.find(task.Thread) == thread_map.end()) {
                 thread_map[task.Thread] = task;
@@ -90,19 +90,16 @@ void Graph::construct_dependency_graph(const char* filename) {
 }
 
 void Graph::replay_log() {
-    std::cout << "Replay log" << std::endl;
+    std::ofstream fout("replay.log", std::ios::out | std::ios::trunc);
     for (auto it = dependency_graph.begin(); it != dependency_graph.end();
          ++it) {
-        std::cout << it->first.Type << " " << it->first.Start << " "
-                  << it->first.End << " " << it->first.Thread << " "
-                  << it->first.Process << " " << it->first.Stream << " "
-                  << it->first.Correlation << " " << it->first.Note
-                  << std::endl;
+        fout << "[(" << it->first.Type << "," << it->first.Start << ","
+                  << it->first.End << ")"
+                  << " ";
         for (auto task : it->second) {
-            std::cout << task.Type << " " << task.Start << " " << task.End
-                      << " " << task.Thread << " " << task.Process << " "
-                      << task.Stream << " " << task.Correlation << " "
-                      << task.Note << std::endl;
+            fout << "-> (" << task.Type << "," << task.Start << ","
+                      << task.End << ")";
         }
+        fout << "]" << std::endl;
     }
 }
