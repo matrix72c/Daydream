@@ -8,7 +8,6 @@ import torch.optim as optim
 from ResNet import ResNet50
 
 import daydream
-daydream.start("")
 
 transform_train = transforms.Compose([
     transforms.RandomHorizontalFlip(),
@@ -46,6 +45,7 @@ for epoch in range(EPOCHS):
     losses = []
     running_loss = 0
     for i, inp in enumerate(trainloader):
+        daydream.start("")
         inputs, labels = inp
         inputs, labels = inputs.to('cuda'), labels.to('cuda')
         
@@ -57,14 +57,15 @@ for epoch in range(EPOCHS):
         optimizer.step()
         running_loss += loss.item()
         
-        if i%100 == 0 and i > 0:
+        if i == 0:
             print(f'Loss [{epoch+1}, {i}](epoch, minibatch): ', running_loss / 100)
             running_loss = 0.0
+            daydream.stop()
+            break
 
     avg_loss = sum(losses)/len(losses)
     scheduler.step(avg_loss)
             
-daydream.stop()
 print('Training Done')
 
 

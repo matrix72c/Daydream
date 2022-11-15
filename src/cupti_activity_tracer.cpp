@@ -36,8 +36,6 @@ void csv_print(std::string Type,
                unsigned int Stream,
                unsigned int Correlation,
                std::string Note) {
-    // printf("\"%s\",%llu,%llu,%u,%u,%u,%u,\"%s\"\n", Type.c_str(), Start, End,
-    //        Thread, Process, Stream, Correlation, Note.c_str());
     fout << "\"" << Type << "\"," << Start << "," << End << "," << Thread
          << "," << Process << "," << Stream << "," << Correlation << ",\""
          << Note << "\"\n";
